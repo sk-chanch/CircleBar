@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 @IBDesignable class SHCircleBar: UITabBar {
     var tabWidth: CGFloat = 0
@@ -17,7 +18,16 @@ import UIKit
     }
     private var animated = false
     private var selectedImage: UIImage?
-    private var previousIndex: CGFloat = 0
+    public var previousIndex: CGFloat = 0
+    
+    @IBInspectable var imageUnselectColor:UIColor = .red{
+        didSet{
+            unselectedItemTintColor = imageUnselectColor
+        }
+    }
+    
+    private let disposeBag = DisposeBag()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         customInit()
@@ -29,7 +39,8 @@ import UIKit
         
     }
     override func draw(_ rect: CGRect) {
-        let fillColor: UIColor = .white
+        
+        let fillColor: UIColor = barTintColor ?? .white
         tabWidth = self.bounds.width / CGFloat(self.items!.count)
         let bezPath = drawPath(for: index)
         
@@ -38,7 +49,7 @@ import UIKit
         bezPath.fill()
         let mask = CAShapeLayer()
         mask.fillRule = .evenOdd
-        mask.fillColor = UIColor.white.cgColor
+        mask.fillColor =  (barTintColor ?? .white).cgColor
         mask.path = bezPath.cgPath
         if (self.animated) {
             let bezAnimation = CABasicAnimation(keyPath: "path")
@@ -62,9 +73,10 @@ import UIKit
     }
     
     func customInit(){
-        self.tintColor = .white
-        self.barTintColor = .white
-        self.backgroundColor = .white
+        self.tintColor = barTintColor ?? .white
+        self.barTintColor = barTintColor ?? .white
+        self.backgroundColor = barTintColor ?? .white
+        unselectedItemTintColor = imageUnselectColor
     }
     private func drawPath(for index: CGFloat) -> UIBezierPath {
         let bezPath = UIBezierPath()

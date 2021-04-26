@@ -36,5 +36,8 @@ s.description      = 'CircleBar is a fun tab bar navigation controller, written 
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  
+  
+  s.dependency 'RxSwift', '~> 5.1.1'
+  s.dependency 'RxCocoa', '~> 5.1.1'
 end

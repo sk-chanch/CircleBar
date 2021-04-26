@@ -1,16 +1,33 @@
 PODS:
-  - CircleBar (0.1.0)
+  - CircleBar (0.8.2):
+    - RxCocoa (~> 5.1.1)
+    - RxSwift (~> 5.1.1)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.2)
 
 DEPENDENCIES:
   - CircleBar (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - RxCocoa
+    - RxRelay
+    - RxSwift
 
 EXTERNAL SOURCES:
   CircleBar:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CircleBar: b9c26c3833a648ef0bd56102d9e15c2dc050588f
+  CircleBar: c48252b0bcafd44bb8fde9c269083f3a0291e9ce
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 1e2e1f9570186967f617e49128ed26ccf1bafc8e
 
 PODFILE CHECKSUM: c85bb2d45d7d4fdfeeaa049dfcacccb3a811d08b
 
-COCOAPODS: 1.6.0.beta.2
+COCOAPODS: 1.10.1

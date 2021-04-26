@@ -212,12 +212,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = M39CJAQV5X;
+						DevelopmentTeam = DQXVMM94CM;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = M39CJAQV5X;
+						DevelopmentTeam = DQXVMM94CM;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -228,6 +228,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -312,17 +313,19 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CircleBar_Example/Pods-CircleBar_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CircleBar/CircleBar.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CircleBar.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -481,7 +484,7 @@
 			baseConfigurationReference = 5D0F746CE4C3541C3CCE8A0B /* Pods-CircleBar_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = M39CJAQV5X;
+				DEVELOPMENT_TEAM = DQXVMM94CM;
 				INFOPLIST_FILE = CircleBar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -497,7 +500,7 @@
 			baseConfigurationReference = 22DB8C4E5A0983400E7996EE /* Pods-CircleBar_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = M39CJAQV5X;
+				DEVELOPMENT_TEAM = DQXVMM94CM;
 				INFOPLIST_FILE = CircleBar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -512,7 +515,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 64804F4457C7324CACEEAC0A /* Pods-CircleBar_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = M39CJAQV5X;
+				DEVELOPMENT_TEAM = DQXVMM94CM;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -535,7 +538,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C98010CD4B98A08627A2B7B6 /* Pods-CircleBar_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = M39CJAQV5X;
+				DEVELOPMENT_TEAM = DQXVMM94CM;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
