@@ -26,7 +26,7 @@ s.description      = 'CircleBar is a fun tab bar navigation controller, written 
   s.source           = { :git => 'https://github.com/softhausHQ/CircleBar.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/softhausHQ'
 
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '11.0'
   s.swift_version = '4.2'
   s.source_files = 'CircleBar/Classes/*'
   
