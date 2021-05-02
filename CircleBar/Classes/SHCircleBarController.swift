@@ -54,7 +54,7 @@ open class SHCircleBarController: UITabBarController {
         
         self.circleView = UIView(frame: .zero)
         circleView.layer.cornerRadius = 30
-        circleView.backgroundColor = .white
+        circleView.backgroundColor = tabBar.barTintColor ?? .white
         circleView.isUserInteractionEnabled = false
         
         self.circleImageView = UIImageView(frame: .zero)
