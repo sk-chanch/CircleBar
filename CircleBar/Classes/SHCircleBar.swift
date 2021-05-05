@@ -52,13 +52,22 @@ import RxSwift
         mask.fillColor =  (barTintColor ?? .white).cgColor
         mask.path = bezPath.cgPath
         if (self.animated) {
+            CATransaction.begin()
             let bezAnimation = CABasicAnimation(keyPath: "path")
             let bezPathFrom = drawPath(for: previousIndex)
             bezAnimation.toValue = bezPath.cgPath
             bezAnimation.fromValue = bezPathFrom.cgPath
             bezAnimation.duration = 0.3
             bezAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            
+            CATransaction.setCompletionBlock {[weak self] in
+                   print("end animation")
+                self?.previousIndex = self?.index ?? 0
+            }
+            
             mask.add(bezAnimation, forKey: nil)
+            
+            CATransaction.commit()
         }
         self.layer.mask = mask
 
