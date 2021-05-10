@@ -119,6 +119,7 @@ open class SHCircleBarController: UITabBarController {
                         guard animated else {
                             self?.circleView.alpha = 0
                             self?.circleView.transform = .identity
+                            self?.customTabbar?.previousIndex = CGFloat(self?.selectedIndex ?? 0)
                             return
                         }
                         
