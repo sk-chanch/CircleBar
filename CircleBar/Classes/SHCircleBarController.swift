@@ -87,13 +87,14 @@ open class SHCircleBarController: UITabBarController {
                                   height: 60)
         circleImageView.frame = self.circleView.bounds
         
-        
+    
+      
         rx.navigationState
             .observeOn(MainScheduler.instance)
             .subscribe(onNext:{[weak self] state in
                 switch state {
-                case let .didShow(controller,  animate):
-                    if !controller.hidesBottomBarWhenPushed {
+                case let .viewDidAppear(controller,  animate):
+                    if !(controller?.navigationController?.viewControllers[safe: 1]?.hidesBottomBarWhenPushed ?? false) {
                         guard animate else {
                             self?.circleView.transform = .identity
                             return
@@ -102,11 +103,9 @@ open class SHCircleBarController: UITabBarController {
                        
                         self?.animateSlideUp()
                     }
-                    
                    
-                    break
                     
-                case let .willShow(controller,  animate):
+                case let .push(controller , animated):
                    
                    
                     if controller.hidesBottomBarWhenPushed {
@@ -117,7 +116,7 @@ open class SHCircleBarController: UITabBarController {
                         let offsetX = CGFloat(itemWidth * ((customSelectIndex ?? 0) + 1))
                         
                         
-                        guard animate else {
+                        guard animated else {
                             self?.circleView.alpha = 0
                             self?.circleView.transform = .identity
                             return
@@ -137,6 +136,11 @@ open class SHCircleBarController: UITabBarController {
                         })
                        
                     }
+                    
+                
+                    
+                default:
+                    return
                 }
             }).disposed(by: disposeBag)
         
@@ -264,30 +268,69 @@ extension UITabBarController{
 extension Reactive where Base:UITabBarController{
     
     enum NavigationState {
-        case willShow(viewController: UIViewController, animated: Bool)
-        case didShow(viewController: UIViewController, animated: Bool)
+        case viewDidAppear(viewController: UIViewController?, animated: Bool)
+        case push(viewController: UIViewController, animated: Bool)
     }
     
-    var willShow:Observable<NavigationState>{
-        let navList = base.viewControllers?
+    var navList:[UINavigationController]{
+        base.viewControllers?
             .filter{$0 is UINavigationController}
             .map{$0 as? UINavigationController}
-            .map{$0?.rx.willShow.asObservable() ?? .empty()} ?? []
-        return Observable.merge(navList)
-            .map{NavigationState.willShow(viewController: $0, animated: $1)}
+            .compactMap{$0} ?? []
     }
     
-    
-    var didShow:Observable<NavigationState>{
-        let navList = base.viewControllers?
+    var navFirstViewController:[UIViewController]{
+        base.viewControllers?
             .filter{$0 is UINavigationController}
             .map{$0 as? UINavigationController}
-            .map{$0?.rx.didShow.asObservable() ?? .empty()} ?? []
-        return Observable.merge(navList)
-            .map{NavigationState.didShow(viewController: $0, animated: $1)}
+            .compactMap{$0?.viewControllers.first} ?? []
     }
+    
+  
+    
+    var navFirstControllerviewDidAppear:Observable<NavigationState>{
+        let source = navFirstViewController
+            .map{controller in controller.rx.viewDidAppear.asObservable()
+            .map{[weak controller] in (controller, $0)}
+        }
+        
+        return Observable.merge(source)
+            .map{NavigationState.viewDidAppear(viewController: $0, animated: $1)}
+    }
+    
+    var navPush:Observable<NavigationState>{
+        let source = navList.map{nav in nav.rx.push.filter{[weak nav] controller, _  in
+            let index = nav?.viewControllers.firstIndex(of: controller) ?? 0
+            return index == 1
+        }.asObservable()}
+        return Observable.merge(source)
+            .map{NavigationState.push(viewController: $0, animated: $1)}
+    }
+    
+   
+ 
     
     var navigationState:Observable<NavigationState>{
-        Observable.merge(willShow, didShow)
+        Observable.merge(navFirstControllerviewDidAppear, navPush)
+    }
+}
+
+
+
+extension Reactive where Base:UINavigationController{
+    var push:ControlEvent<(UIViewController, Bool)>{
+        let source = self.methodInvoked(#selector(Base.pushViewController(_:animated:)))
+            .map{($0[0] as? UIViewController, $0[1] as? Bool ?? false)}
+            .filter{a,_ in a != nil}
+            .map{($0!, $1)}
+          
+        
+        return ControlEvent(events: source)
+    }
+}
+
+extension Array {
+    subscript (safe index: Int) -> Element? {
+        return indices ~= index ? self[index] : nil
     }
 }
