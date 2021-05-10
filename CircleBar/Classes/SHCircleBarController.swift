@@ -136,11 +136,7 @@ open class SHCircleBarController: UITabBarController {
                         })
                        
                     }
-                    
-                
-                    
-                default:
-                    return
+                 
                 }
             }).disposed(by: disposeBag)
         
