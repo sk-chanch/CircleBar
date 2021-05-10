@@ -28,6 +28,9 @@
     ],
     "RxCocoa": [
       "~> 5.1.1"
+    ],
+    "RxViewController": [
+
     ]
   },
   "swift_version": "4.2"

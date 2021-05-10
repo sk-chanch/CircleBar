@@ -9,6 +9,18 @@
 import UIKit
 import RxSwift
 
+
+extension ObservableType {
+    func map<R>(to value: R) -> Observable<R> {
+        return map {_ in value}
+    }
+    
+    func unwrap<T>() -> Observable<T> where Element == Optional<T> {
+        return self.filter { $0 != nil }.map { $0! }
+    }
+}
+
+
 @IBDesignable class SHCircleBar: UITabBar {
     var tabWidth: CGFloat = 0
     var index: CGFloat = 0 {

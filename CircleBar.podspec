@@ -40,4 +40,5 @@ s.description      = 'CircleBar is a fun tab bar navigation controller, written 
   
   s.dependency 'RxSwift', '~> 5.1.1'
   s.dependency 'RxCocoa', '~> 5.1.1'
+  s.dependency 'RxViewController'
 end

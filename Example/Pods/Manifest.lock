@@ -2,12 +2,16 @@ PODS:
   - CircleBar (0.8.2):
     - RxCocoa (~> 5.1.1)
     - RxSwift (~> 5.1.1)
+    - RxViewController
   - RxCocoa (5.1.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
   - RxSwift (5.1.2)
+  - RxViewController (1.0.0):
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
 
 DEPENDENCIES:
   - CircleBar (from `../`)
@@ -17,16 +21,18 @@ SPEC REPOS:
     - RxCocoa
     - RxRelay
     - RxSwift
+    - RxViewController
 
 EXTERNAL SOURCES:
   CircleBar:
     :path: "../"
 
 SPEC CHECKSUMS:
-  CircleBar: c48252b0bcafd44bb8fde9c269083f3a0291e9ce
+  CircleBar: 04f53870da7253f343053f4878b1e22090854be2
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
   RxSwift: 1e2e1f9570186967f617e49128ed26ccf1bafc8e
+  RxViewController: 7330a46e5c31cd680db169da4c9fc8676e975a81
 
 PODFILE CHECKSUM: c85bb2d45d7d4fdfeeaa049dfcacccb3a811d08b
 

@@ -9,6 +9,8 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxViewController
+
 open class SHCircleBarController: UITabBarController {
 
     private let disposeBag = DisposeBag()
@@ -80,67 +82,80 @@ open class SHCircleBarController: UITabBarController {
         circleImageView.frame = self.circleView.bounds
         
         
-        let navList = viewControllers?
-            .filter{$0 is UINavigationController}
-            .map{$0 as? UINavigationController}
-        
-        
-        let navWillShowList = navList?
-            .map{$0?.rx.willShow.asObservable() ?? .empty()} ?? []
-        
-        
-        let navDidShowList = navList?
-            .map{$0?.rx.didShow.asObservable() ?? .empty()} ?? []
-        
-        
-       Observable.merge(navDidShowList)
+        rx.navigationState
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext:{[weak self] v in
-                if !v.viewController.hidesBottomBarWhenPushed {
-                    self?.circleView.transform = .identity
-                    UIView.animate(withDuration: 0.5){
-                        self?.circleView.alpha = 1
+            .subscribe(onNext:{[weak self] state in
+                switch state {
+                case let .didShow(controller,  animate):
+                    if !controller.hidesBottomBarWhenPushed {
+                        guard animate else {
+                            self?.circleView.transform = .identity
+                            return
+                        }
+                        self?.circleView.transform = .identity
+                       
+                        self?.animateSlideUp()
                     }
-                }
-            }).disposed(by: disposeBag)
-        
-        
-        Observable.merge(navWillShowList)
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext:{[weak self] v in
-                if v.viewController.hidesBottomBarWhenPushed {
+                    
                    
-                    UIView.animate(withDuration: 0.45, delay: 0, options: .curveEaseOut){
-                        self?.circleView.alpha = 0
-                        let customSelectIndex = self?.selectedIndex//self?.selectedIndex == 0 ? 1:self?.selectedIndex
+                    break
+                    
+                case let .willShow(controller,  animate):
+                   
+                   
+                    if controller.hidesBottomBarWhenPushed {
+                        
+                        
+                        let customSelectIndex = self?.selectedIndex
                         let itemWidth  =  Int(self?.view.bounds.width ?? 0) / (self?.tabBar.items?.count ?? 0)
                         let offsetX = CGFloat(itemWidth * ((customSelectIndex ?? 0) + 1))
-                        self?.circleView.transform = .init(translationX:  -offsetX,
-                                                           y:0)
                         
-                        self?.customTabbar?.previousIndex = CGFloat(self?.selectedIndex ?? 0)
+                        
+                        guard animate else {
+                            self?.circleView.alpha = 0
+                            self?.circleView.transform = .identity
+                            return
+                        }
+                        
+                        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                            
+                            self?.circleView.alpha = 0
+                           
+                            self?.circleView.transform = .init(translationX:  -offsetX,
+                                                               y:0)
+                            
+                        }, completion: {[weak self] in
+                            if $0 {
+                                self?.customTabbar?.previousIndex = CGFloat(self?.selectedIndex ?? 0)
+                            }
+                        })
+                       
                     }
                 }
             }).disposed(by: disposeBag)
         
         
-        view.rx.viewWillAppear
+        rx.viewDidLayoutSubviews
             .take(1)
             .observeOn(MainScheduler.instance)
             .subscribe(onNext:{[weak self] in
                 
-                self?.circleView.setY(with: self?.view.frame.height ?? 0)
-                let safeBottom = UIApplication.shared.windows.first?.safeAreaInsets.bottom ?? 0
-                let y =   (self?.tabBar.frame.origin.y ?? 0) - (safeBottom) - 15
-                
-                self?.circleImageView.tintColor = self?.imageColor
-                
-                UIView.animate(withDuration: 0.3){
-                    self?.circleView.setY(with: y)
-                }
+                self?.animateSlideUp()
             }).disposed(by: disposeBag)
     
     
+    }
+    
+    private func animateSlideUp(){
+        circleView.setY(with: view.frame.height)
+        let y =   tabBar.frame.origin.y  - 15
+        
+        circleImageView.tintColor = imageColor
+        
+        UIView.animate(withDuration: 0.3){[weak self] in
+            self?.circleView.alpha = 1
+            self?.circleView.setY(with: y)
+        }
     }
     
   
@@ -227,22 +242,41 @@ internal extension UIView{
 }
 
 
-internal extension Reactive where Base:UIView{
-  
-    var willMoveToWindow: Observable<Bool> {
-        return self.sentMessage(#selector(Base.willMove(toWindow:)))
-            .map({ $0.filter({ !($0 is NSNull) }) })
-            .map({ $0.isEmpty == false })
+extension UITabBarController{
+    var circleBar:SHCircleBar?{
+        tabBar as? SHCircleBar
     }
-    
-    var viewWillAppear: Observable<()> {
-        return self.willMoveToWindow
-            .filter({ $0 })
-            .map({ _ in Void() })
-    }
-   
-    
 }
 
 
 
+extension Reactive where Base:UITabBarController{
+    
+    enum NavigationState {
+        case willShow(viewController: UIViewController, animated: Bool)
+        case didShow(viewController: UIViewController, animated: Bool)
+    }
+    
+    var willShow:Observable<NavigationState>{
+        let navList = base.viewControllers?
+            .filter{$0 is UINavigationController}
+            .map{$0 as? UINavigationController}
+            .map{$0?.rx.willShow.asObservable() ?? .empty()} ?? []
+        return Observable.merge(navList)
+            .map{NavigationState.willShow(viewController: $0, animated: $1)}
+    }
+    
+    
+    var didShow:Observable<NavigationState>{
+        let navList = base.viewControllers?
+            .filter{$0 is UINavigationController}
+            .map{$0 as? UINavigationController}
+            .map{$0?.rx.didShow.asObservable() ?? .empty()} ?? []
+        return Observable.merge(navList)
+            .map{NavigationState.didShow(viewController: $0, animated: $1)}
+    }
+    
+    var navigationState:Observable<NavigationState>{
+        Observable.merge(willShow, didShow)
+    }
+}
