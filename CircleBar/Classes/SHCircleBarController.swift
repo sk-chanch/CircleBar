@@ -51,6 +51,12 @@ open class SHCircleBarController: UITabBarController {
         }
     }
     
+    @IBInspectable var imageSize:CGSize = .init(width: 30, height: 30) {
+        didSet{
+            circleImageView?.image = image(with: self.tabBar.selectedItem?.image ?? self.tabBar.items?.first?.image, scaledTo: imageSize)
+        }
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -162,7 +168,7 @@ open class SHCircleBarController: UITabBarController {
    
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        circleImageView.image = image(with: self.tabBar.selectedItem?.image ?? self.tabBar.items?.first?.image, scaledTo: CGSize(width: 30, height: 30))
+        circleImageView.image = image(with: self.tabBar.selectedItem?.image ?? self.tabBar.items?.first?.image, scaledTo: imageSize)
         
     }
     
@@ -207,15 +213,20 @@ open class SHCircleBarController: UITabBarController {
             shouldSelectOnTabBar = false
             selectedIndex = idx
             let tabWidth = self.view.bounds.width / CGFloat(self.tabBar.items!.count)
-            UIView.animate(withDuration: 0.3) {
-                self.circleView.frame = CGRect(x: (tabWidth * CGFloat(idx) + tabWidth / 2 - 30), y: self.tabBar.frame.origin.y - 15, width: 60, height: 60)
+            UIView.animate(withDuration: 0.3) {[weak self] in
+                guard let self  = self else{return}
+                self.circleView.frame = CGRect(x: (tabWidth * CGFloat(idx) + tabWidth / 2 - 30),
+                                               y: self.tabBar.frame.origin.y - 15, width: 60, height: 60)
             }
-            UIView.animate(withDuration: 0.15, animations: {
-                self.circleImageView.alpha = 0
-            }) { (_) in
-                self.circleImageView.image = self.image(with: item.image, scaledTo: CGSize(width: 30, height: 30))
-                UIView.animate(withDuration: 0.15, animations: {
-                    self.circleImageView.alpha = 1
+            UIView.animate(withDuration: 0.15, animations: {[weak self] in
+                self?.circleImageView.alpha = 0
+            }) {[weak self] (_) in
+                guard let self = self else{
+                    return
+                }
+                self.circleImageView.image = self.image(with: item.image, scaledTo: self.imageSize)
+                UIView.animate(withDuration: 0.15, animations: {[weak self] in
+                    self?.circleImageView.alpha = 1
                 })
             }
             delegate?.tabBarController?(self, didSelect: controller)
