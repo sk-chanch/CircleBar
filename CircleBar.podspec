@@ -38,7 +38,7 @@ s.description      = 'CircleBar is a fun tab bar navigation controller, written 
   # s.frameworks = 'UIKit', 'MapKit'
   
   
-  s.dependency 'RxSwift', '~> 5.1.1'
-  s.dependency 'RxCocoa', '~> 5.1.1'
+  s.dependency 'RxSwift'
+  s.dependency 'RxCocoa'
   s.dependency 'RxViewController'
 end
