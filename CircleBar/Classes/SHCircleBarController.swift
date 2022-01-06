@@ -57,6 +57,32 @@ open class SHCircleBarController: UITabBarController {
         }
     }
     
+    open var circleViewShadowConfig:ShadowConfig?{
+        didSet{
+            guard let config = self.circleViewShadowConfig else{
+                return
+            }
+            circleView.layer.shadowColor = config.shadowColor
+            circleView.layer.shadowOpacity = config.shadowOpacity
+            circleView.layer.shadowRadius = config.shadowRadius
+            circleView.layer.shadowOffset = config.shadowOffset
+            
+            circleView.layer.shouldRasterize = true
+            circleView.layer.rasterizationScale = UIScreen.main.scale
+        }
+    }
+    
+    open var circleViewColor:UIColor?{
+        didSet{
+            guard let color = circleViewColor else {
+                return
+            }
+            
+            circleView.backgroundColor = color
+
+        }
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -70,12 +96,6 @@ open class SHCircleBarController: UITabBarController {
         circleImageView.isUserInteractionEnabled = false
         circleImageView.contentMode = .center
         
-        circleView.layer.shadowColor = UIColor.lightGray.cgColor
-        circleView.layer.shadowOpacity = 0.7
-        circleView.layer.shadowRadius = 3
-        circleView.layer.shadowOffset = CGSize(width: 1, height: 2)
-        circleView.layer.shouldRasterize = true
-        circleView.layer.rasterizationScale = UIScreen.main.scale
         
         circleView.addSubview(circleImageView)
         self.view.addSubview(circleView)
