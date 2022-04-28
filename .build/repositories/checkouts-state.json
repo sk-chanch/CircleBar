@@ -1,0 +1,19 @@
+{
+  "object" : {
+    "repositories" : {
+      "https://github.com/devxoul/RxExpect.git" : {
+        "repositoryURL" : "https://github.com/devxoul/RxExpect.git",
+        "subpath" : "RxExpect-933d1b7b"
+      },
+      "https://github.com/devxoul/RxViewController.git" : {
+        "repositoryURL" : "https://github.com/devxoul/RxViewController.git",
+        "subpath" : "RxViewController-3b7217dd"
+      },
+      "https://github.com/ReactiveX/RxSwift.git" : {
+        "repositoryURL" : "https://github.com/ReactiveX/RxSwift.git",
+        "subpath" : "RxSwift-87bc79fc"
+      }
+    }
+  },
+  "version" : 1
+}
