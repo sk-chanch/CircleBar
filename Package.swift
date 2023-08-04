@@ -13,7 +13,7 @@ let package = Package(
             targets: ["CircleBar"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMinor(from: "6.5.0")),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
         .package(url: "https://github.com/sk-chanch/RxViewController.git", .upToNextMinor(from: "2.2.0"))
         
         
